@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.util.List;
 public class ImagemActivity extends Activity {
 
     private ImageView imagem;
+    private Button botaoAvancar;
+    private Button botaoVoltar;
     private Integer posicaoImagem = 0;
     public List<Bitmap> listaBitmap = new ArrayList<Bitmap>();
     public List<URL> listaUrl = new ArrayList<URL>();
@@ -25,9 +29,10 @@ public class ImagemActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_imagem_activicty);
+        setContentView(R.layout.activity_imagem_activity);
         imagem = (ImageView) findViewById(R.id.imagem);
-
+        botaoAvancar = (Button) findViewById(R.id.avancar);
+        botaoVoltar = (Button) findViewById(R.id.voltar);
         carregaGaleria();
 
     }
@@ -43,14 +48,28 @@ public class ImagemActivity extends Activity {
         return myBitmap;
     }
 
-    public void avancar() {
-    if (posicaoImagem < listaBitmap.size())
-        imagem.setImageBitmap(listaBitmap.get(posicaoImagem+1));
+    public void avancar( View view) {
+    if (posicaoImagem < 4) {
+        posicaoImagem += 1;
+        imagem.setImageBitmap(listaBitmap.get(posicaoImagem));
+
+    }else{
+        posicaoImagem = 0;
+        imagem.setImageBitmap(listaBitmap.get(posicaoImagem));
     }
 
-    public void voltar() {
-
     }
+
+    public void voltar( View view) {
+        if (posicaoImagem <= 4 && posicaoImagem > 0){
+            posicaoImagem = posicaoImagem - 1;
+            imagem.setImageBitmap(listaBitmap.get(posicaoImagem));
+        }else if( posicaoImagem == 0 ){
+            posicaoImagem = 4;
+            imagem.setImageBitmap(listaBitmap.get(posicaoImagem));
+        }
+    }
+
 
 
     public void carregaUrl() throws MalformedURLException {
@@ -85,7 +104,7 @@ public class ImagemActivity extends Activity {
 
         if(listaBitmap.size() != 0 ){
         imagem.setImageBitmap(listaBitmap.get(0));
-        posicaoImagem = 0;}
+        }
 
     }
     public class DownloadImagemAsync extends AsyncTask<URL, Integer, Bitmap> {
